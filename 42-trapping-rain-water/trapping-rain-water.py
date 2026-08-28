@@ -1,10 +1,16 @@
 class Solution:
     def trap(self, height: List[int]) -> int:
-        leftMax, rightMax, res = [], [], 0
-        currLeft, currRight = 0, 0
-        for h in height: currLeft = max(currLeft, h); leftMax.append(currLeft)
-        for i in range(len(height) - 1, -1, -1): currRight = max(currRight,height[i]); rightMax.append(currRight)
-        for i in range(1, len(height) - 1):
-            res += max(0,min(leftMax[i-1], rightMax[len(height) - i - 1]) - height[i])
+        l, r = 0, len(height) - 1
+        res = 0
+        leftMax, rightMax = height[0], height[-1]
+        while l < r: 
+            if leftMax >= rightMax:
+                r -= 1
+                res += max(0, rightMax - height[r])
+                rightMax = max(rightMax,height[r])
+            else:
+                l += 1
+                res += max(0, leftMax - height[l])
+                leftMax = max(leftMax,height[l])
+        
         return res
-
