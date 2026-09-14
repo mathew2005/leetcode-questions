@@ -4,47 +4,47 @@
 #         self.val = val
 #         self.next = next
 class Solution:
+    # MAKE THIS RECURSIVE
     def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if not head or not head.next:
-            return head
-        
-        left = head
-        right = self.getMid(head)
-        tmp = right.next
-        right.next = None
-        right = tmp
+        # progressivley half the linked list
+            # find the middle
+            if not head or not head.next: 
+                return head
+            # mid = self.middle(head)
+            right = self.sortList(self.middle(head))
+            left = self.sortList(head)
 
-        left = self.sortList(left)
-        right = self.sortList(right)
+            return self.merge(left, right)
 
-        return self.merge(left,right)
-    def getMid(self,head):
-        slow, fast = head, head.next
-        while fast and fast.next:
-            slow = slow.next
-            fast = fast.next.next
-        return slow
-    
+
+        # sort while merging as we go (when building back up)
+            # sort two linked list parts
+            # merge them together
+
+    def middle(self, head):
+        slowPtr = head
+        fastPtr = head.next
+        while fastPtr and fastPtr.next:
+            slowPtr = slowPtr.next
+            fastPtr = fastPtr.next.next
+        mid = slowPtr.next
+        slowPtr.next = None
+        return mid
+
+
     def merge(self,list1,list2):
-        dummy = ListNode()
-        curr = dummy
+        dummy = tail = ListNode()
         while list1 and list2:
-            if list1.val <= list2.val:
-                curr.next = ListNode(list1.val)
+            if list1.val < list2.val:
+                tail.next = list1
                 list1 = list1.next
             else:
-                curr.next = ListNode(list2.val)
+                tail.next = list2
                 list2 = list2.next
-
-            curr = curr.next
-        while list1:
-            curr.next = ListNode(list1.val)
-            list1 = list1.next
-            curr = curr.next
-
-        while list2:
-            curr.next = ListNode(list2.val)
-            list2 = list2.next
-            curr = curr.next
-
+            tail = tail.next
+        if list1:
+            tail.next = list1
+        if list2:
+            tail.next = list2
         return dummy.next
+
