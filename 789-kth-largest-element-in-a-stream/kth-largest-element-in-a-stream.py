@@ -1,15 +1,21 @@
-# input: int k, test scores list
-# output: kth highest test score (int)
+from heapq import heapify, heappop, heappush
 class KthLargest:
 
     def __init__(self, k: int, nums: list[int]):
         self.k = k
-        self.nums = nums
+        nums.sort(reverse=True)
+        self.min_heap = nums[:k]
+        heapify(self.min_heap)
 
     def add(self, val: int) -> int:
-        self.nums.append(val)
-        self.nums.sort(reverse=True)
-        return self.nums[self.k - 1]
+        if len(self.min_heap) < self.k:
+            heappush(self.min_heap, val)
+        elif val > self.min_heap[0]:
+            heappop(self.min_heap)
+            heappush(self.min_heap,val)
+        
+        return self.min_heap[0]
+        
 
 
 # Your KthLargest object will be instantiated and called as such:
